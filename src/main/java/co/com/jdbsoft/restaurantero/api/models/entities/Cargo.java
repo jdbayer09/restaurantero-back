@@ -1,13 +1,9 @@
 package co.com.jdbsoft.restaurantero.api.models.entities;
 
-import co.com.jdbsoft.restaurantero.api.models.entities.common.MasterBaseEntity;
+import co.com.jdbsoft.restaurantero.api.models.entities.common.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 
@@ -16,14 +12,21 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
 @NoArgsConstructor
-@RequiredArgsConstructor(staticName = "of")
-public class Cargo extends MasterBaseEntity {
+@AllArgsConstructor
+public class Cargo extends BaseEntity {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cargo")
     @JsonManagedReference
     @ToString.Exclude
-    List<CargoPermiso> permisos;
+    private List<CargoPermiso> permisos;
+    @Column(name = "nombre", length = 100, nullable = false, unique = true)
+    private String nombre;
+    @Column(name = "descripcion", length = 300, nullable = false)
+    private String descripcion;
 
+    public Cargo(Long id){
+        setId(id);
+    }
 }

@@ -4,7 +4,6 @@ import co.com.jdbsoft.restaurantero.api.models.entities.common.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
 
 @Entity
 @Table(
@@ -14,17 +13,17 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @ToString
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
 @NoArgsConstructor
-@RequiredArgsConstructor(staticName = "of")
+@AllArgsConstructor
 public class CargoPermiso extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "cargo_id", nullable = false)
     @JsonBackReference
-    Cargo cargo;
+    private Cargo cargo;
 
     @ManyToOne
     @JoinColumn(name = "permiso_id", nullable = false)
-    Permiso permiso;
+    private Permiso permiso;
 }

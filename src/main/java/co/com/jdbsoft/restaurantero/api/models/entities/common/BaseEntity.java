@@ -1,37 +1,41 @@
 package co.com.jdbsoft.restaurantero.api.models.entities.common;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.ZonedDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @MappedSuperclass
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 public abstract class BaseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true)
-    Long id;
+    private Long id;
     @Column(name="active", nullable = false)
-    boolean activo = true;
+    private boolean activo = true;
     @Column(name = "fecha_creacion", nullable = false, columnDefinition = "timestamp")
-    ZonedDateTime fechaCreacion;
-    @Column(name = "fecha_actualizacion", nullable = false, columnDefinition = "timestamp")
-    ZonedDateTime fechaActualizacion;
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    private Date fechaCreacion;
+    @Column(name = "fecha_actualizacion", columnDefinition = "timestamp")
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    private Date fechaActualizacion;
     @PreUpdate
-    public void preUpdate() {
-        this.fechaActualizacion = ZonedDateTime.now();
+    private void preUpdate() {
+        this.fechaActualizacion = new Date(System.currentTimeMillis());
     }
     @PrePersist
     private void prePersist() {
-        this.fechaCreacion = ZonedDateTime.now();
+        this.fechaCreacion = new Date(System.currentTimeMillis());
     }
 
 }
