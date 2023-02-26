@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -25,7 +24,6 @@ import java.util.function.Function;
 
 @Service
 public class JWTServiceImpl implements JWTService {
-
     @Value("${restaurantero.jwt.secret-key}")
     private String secretKey;
     @Value("${restaurantero.jwt.application-name}")
@@ -33,12 +31,10 @@ public class JWTServiceImpl implements JWTService {
     @Value("${restaurantero.jwt.expiration-token-hours}")
     private long expirationTokenHours;
 
-
     @Override
     public String getUsuario(String token) {
         return getClaimsToken(token, Claims::getSubject);
     }
-
     @Override
     public String createToken(Authentication auth) throws IOException {
         Claims extraClaims = Jwts.claims();
@@ -54,7 +50,6 @@ public class JWTServiceImpl implements JWTService {
                 .setId(applicationName)
                 .compact();
     }
-
     private boolean isTokenExpired(String token) {
         return extraerExpiracion(token).before(new Date());
     }
@@ -65,21 +60,16 @@ public class JWTServiceImpl implements JWTService {
     public boolean validateToken(String token) {
         return !isTokenExpired(token);
     }
-
     @Override
     public Collection<? extends GrantedAuthority> getRoles(String token) throws IOException {
         Object roles = getClaimsToken(token, claims -> claims.get("authorities"));
         return Arrays.asList(new ObjectMapper().addMixIn(SimpleGrantedAuthority.class, SimpleGrantedAuthorityMixin.class)
                 .readValue(roles.toString().getBytes(), SimpleGrantedAuthority[].class));
     }
-
-
-
     private <T> T getClaimsToken(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
-
     private Claims extractAllClaims(String token) {
         return Jwts
                 .parserBuilder()
@@ -88,13 +78,10 @@ public class JWTServiceImpl implements JWTService {
                 .parseClaimsJws(resolve(token))
                 .getBody();
     }
-
     private Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-
-
     private String resolve(String token) {
         if (token != null && token.startsWith(TOKEN_PREFIX)) {
             return token.replace(TOKEN_PREFIX, "");

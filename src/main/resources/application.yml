@@ -17,10 +17,10 @@ spring:
 server:
   servlet:
     context-path: /restaurantero/api
-
+  port: 8080
 
 restaurantero:
   jwt:
     secret-key: 413F4428472B4B6250655368566D5971337336763979244226452948404D635166546A576E5A7234753777217A25432A462D4A614E645267556B587032733576
     expiration-token-hours: 14
-    application-name: Restaurantero
+    application-name: RESTAURANTERO

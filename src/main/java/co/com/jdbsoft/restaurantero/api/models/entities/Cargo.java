@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Cargo extends BaseEntity {
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "cargo")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cargo")
     @JsonManagedReference
     @ToString.Exclude
     private List<CargoPermiso> permisos;
@@ -25,8 +25,4 @@ public class Cargo extends BaseEntity {
     private String nombre;
     @Column(name = "descripcion", length = 300, nullable = false)
     private String descripcion;
-
-    public Cargo(Long id){
-        setId(id);
-    }
 }

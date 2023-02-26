@@ -19,7 +19,6 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         super(authenticationManager);
         this.jwtService = jwtService;
     }
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
@@ -43,7 +42,6 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
             chain.doFilter(request, response);
         }
     }
-
     private boolean requiresAuthentication(String header) {
         return header != null && header.startsWith(JWTService.TOKEN_PREFIX);
     }

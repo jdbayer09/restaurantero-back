@@ -3,10 +3,10 @@ package co.com.jdbsoft.restaurantero.api.security;
 import co.com.jdbsoft.restaurantero.api.security.jwt.filter.JWTAuthenticationFilter;
 import co.com.jdbsoft.restaurantero.api.security.jwt.filter.JWTAuthorizationFilter;
 import co.com.jdbsoft.restaurantero.api.security.jwt.service.JWTService;
+import co.com.jdbsoft.restaurantero.api.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,10 +22,9 @@ import java.util.Arrays;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration {
-
     private final JWTService jwtService;
+    private final UsuarioService usuarioService;
     private final AuthenticationConfiguration authConfig;
-
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -39,9 +38,11 @@ public class SecurityConfiguration {
         return source;
     }
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         String[] freePaths = {
+                "/demo"
         };
         httpSecurity
                 .cors()
@@ -53,7 +54,7 @@ public class SecurityConfiguration {
                 .anyRequest()
                     .authenticated()
                 .and()
-                .addFilter(new JWTAuthenticationFilter(authConfig.getAuthenticationManager(), jwtService))
+                .addFilter(new JWTAuthenticationFilter(authConfig.getAuthenticationManager(), jwtService, usuarioService))
                 .addFilter(new JWTAuthorizationFilter(authConfig.getAuthenticationManager(), jwtService))
                 .csrf().disable()
                 .sessionManagement()
