@@ -35,7 +35,7 @@ public final class Usuario extends BaseEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(this.getCargo().getId().toString()));
+        return this.getCargo().getPermisos().stream().map(cargoPermiso -> new SimpleGrantedAuthority(cargoPermiso.getPermiso().getId().toString())).collect(Collectors.toList());
     }
 
     @Override
