@@ -7,10 +7,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "usuarios")
@@ -35,7 +33,7 @@ public final class Usuario extends BaseEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.getCargo().getPermisos().stream().map(cargoPermiso -> new SimpleGrantedAuthority(cargoPermiso.getPermiso().getId().toString())).collect(Collectors.toList());
+        return List.of(new SimpleGrantedAuthority(this.cargo.getNombre()));
     }
 
     @Override

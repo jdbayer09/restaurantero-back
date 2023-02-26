@@ -16,6 +16,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -55,9 +56,15 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
         String token = jwtService.createToken(authResult);
         response.addHeader(JWTService.HEADER_STRING, JWTService.TOKEN_PREFIX + token);
+        Usuario usuarioData = ((Usuario) authResult.getPrincipal());
+
         Map<String, Object> body = new HashMap<>();
         body.put("token", token);
-        body.put("user", ((Usuario) authResult.getPrincipal()).getUsuario());
+        body.put("id", usuarioData.getId());
+        body.put("usuario", usuarioData.getUsuario());
+        body.put("nombre", usuarioData.getNombres() + " " + usuarioData.getApellidos());
+        body.put("permisos", usuarioData.getCargo().getPermisos().stream().map(cargoPermiso -> cargoPermiso.getPermiso().getId()).collect(Collectors.toList()));
+
         response.getWriter().write(new ObjectMapper().writeValueAsString(body));
         response.setStatus(200);
         response.setContentType("application/json");
