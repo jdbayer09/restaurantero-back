@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Cargo extends BaseEntity {
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cargo")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "cargo")
     @JsonManagedReference
     @ToString.Exclude
     private List<CargoPermiso> permisos;

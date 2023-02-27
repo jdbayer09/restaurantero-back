@@ -1,5 +1,6 @@
 package co.com.jdbsoft.restaurantero.api.security.jwt.filter;
 
+import co.com.jdbsoft.restaurantero.api.models.entities.CargoPermiso;
 import co.com.jdbsoft.restaurantero.api.models.entities.Usuario;
 import co.com.jdbsoft.restaurantero.api.models.enums.Plataforma;
 import co.com.jdbsoft.restaurantero.api.models.requests.LoginRequest;
@@ -39,21 +40,15 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         LoginRequest loginRequest;
+        Authentication authResp;
         try {
             loginRequest = new ObjectMapper().readValue(request.getInputStream(), LoginRequest.class);
-            if (loginRequest.getPlataforma().equals(Plataforma.WEB)){
-                if (!usuarioService.validateLoginWeb(loginRequest.getUsuario()))
-                    throw new UsernameNotFoundException("No tienes Acceso a la plataforma Web!");
-            } else if (loginRequest.getPlataforma().equals(Plataforma.APP)) {
-                if (!usuarioService.validateLoginApp(loginRequest.getUsuario()))
-                    throw new UsernameNotFoundException("No tienes Acceso a la plataforma Aplicación móvil!");
-            }
         } catch (IOException e) {
             log.error("Error al iniciar sesión al usuario: \n" + e.getMessage());
             throw new UsernameNotFoundException("Problemas al leer los datos, verifica que todos sean correctos: ['usuario', 'contrasena', 'plataforma']");
         }
         try {
-            return authManager
+            authResp = authManager
                     .authenticate(
                             new UsernamePasswordAuthenticationToken(
                                     loginRequest.getUsuario(),
@@ -68,6 +63,14 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             else
                 throw new UsernameNotFoundException("Error al ingresar tus credenciales!", ae);
         }
+        if (loginRequest.getPlataforma().equals(Plataforma.WEB)){
+            if (!usuarioService.validateLoginWeb(loginRequest.getUsuario()))
+                throw new UsernameNotFoundException("No tienes Acceso a la plataforma Web!");
+        } else if (loginRequest.getPlataforma().equals(Plataforma.APP)) {
+            if (!usuarioService.validateLoginApp(loginRequest.getUsuario()))
+                throw new UsernameNotFoundException("No tienes Acceso a la plataforma Aplicación móvil!");
+        }
+        return authResp;
     }
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
@@ -79,6 +82,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         body.put("id", usuarioData.getId());
         body.put("usuario", usuarioData.getUsuario());
         body.put("nombre", usuarioData.getNombres() + " " + usuarioData.getApellidos());
+        body.put("cargo", usuarioData.getCargo().getNombre());
+        body.put("permisos", usuarioData.getCargo().getPermisos().stream().map(cargoPermiso -> cargoPermiso.getPermiso().getId()).toList());
         log.info(body.toString());
         response.getWriter().write(new ObjectMapper().writeValueAsString(body));
         response.setStatus(200);
