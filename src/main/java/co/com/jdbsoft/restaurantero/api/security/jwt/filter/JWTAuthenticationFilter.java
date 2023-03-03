@@ -83,7 +83,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         body.put("usuario", usuarioData.getUsuario());
         body.put("nombre", usuarioData.getNombres() + " " + usuarioData.getApellidos());
         body.put("cargo", usuarioData.getCargo().getNombre());
-        body.put("permisos", usuarioData.getCargo().getPermisos().stream().map(cargoPermiso -> cargoPermiso.getPermiso().getId()).toList());
+
         log.info(body.toString());
         response.getWriter().write(new ObjectMapper().writeValueAsString(body));
         response.setStatus(200);
