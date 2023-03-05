@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -15,8 +17,9 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Cargo extends BaseEntity {
-
+public class Cargo extends BaseEntity implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -4046614948556884249L;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "cargo")
     @JsonManagedReference
     @ToString.Exclude

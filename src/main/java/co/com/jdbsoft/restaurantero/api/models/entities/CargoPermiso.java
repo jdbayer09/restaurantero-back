@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 @Entity
 @Table(
         name = "cargos_permisos",
@@ -16,8 +19,10 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CargoPermiso extends BaseEntity {
+public class CargoPermiso extends BaseEntity implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = -6752970570726019529L;
     @ManyToOne
     @JoinColumn(name = "cargo_id", nullable = false)
     @JsonBackReference

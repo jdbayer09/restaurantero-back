@@ -11,7 +11,6 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +42,7 @@ public class JWTServiceImpl implements JWTService {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
-                .setSubject(((Usuario) auth.getPrincipal()).getUsuario())
+                .setSubject(((Usuario) auth.getPrincipal()).getLogin())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + (1000 * 60 * 60 * expirationTokenHours)))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS512)
@@ -61,7 +60,7 @@ public class JWTServiceImpl implements JWTService {
         return !isTokenExpired(token);
     }
     @Override
-    public Collection<? extends GrantedAuthority> getRoles(String token) throws IOException {
+    public Collection<SimpleGrantedAuthority> getRoles(String token) throws IOException {
         Object roles = getClaimsToken(token, claims -> claims.get("authorities"));
         return Arrays.asList(new ObjectMapper().addMixIn(SimpleGrantedAuthority.class, SimpleGrantedAuthorityMixin.class)
                 .readValue(roles.toString().getBytes(), SimpleGrantedAuthority[].class));

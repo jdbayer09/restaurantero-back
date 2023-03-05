@@ -7,6 +7,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
@@ -18,9 +20,11 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public final class Usuario extends BaseEntity implements UserDetails {
-    @Column(name = "usuario", nullable = false, length = 100, unique = true)
-    private String usuario;
+public final class Usuario extends BaseEntity implements UserDetails, Serializable {
+    @Serial
+    private static final long serialVersionUID = -8051751340197848209L;
+    @Column(name = "login", nullable = false, length = 100, unique = true)
+    private String login;
     @Column(name = "contrasena", nullable = false, length = 300)
     private String contrasena;
     @Column(name = "nombres", nullable = false, length = 150)
@@ -29,11 +33,11 @@ public final class Usuario extends BaseEntity implements UserDetails {
     private String apellidos;
     @ManyToOne
     @JoinColumn(name = "cargo_id", nullable = false)
-    private Cargo cargo;
+    private Cargo cargoUsuario;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(this.cargo.getNombre()));
+        return List.of(new SimpleGrantedAuthority(this.cargoUsuario.getNombre()));
     }
 
     @Override
@@ -43,7 +47,7 @@ public final class Usuario extends BaseEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.getUsuario();
+        return this.getLogin();
     }
 
     @Override

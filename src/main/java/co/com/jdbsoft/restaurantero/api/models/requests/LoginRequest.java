@@ -10,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginRequest {
-    private String usuario;
+    private String login;
     private String contrasena;
     private Plataforma plataforma;
 }

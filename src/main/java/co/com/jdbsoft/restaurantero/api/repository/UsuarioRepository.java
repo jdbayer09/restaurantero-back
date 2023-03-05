@@ -12,8 +12,8 @@ import java.util.Optional;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
-    Optional<Usuario> findByUsuario(String usuario);
+    Optional<Usuario> findByLogin(String usuario);
 
-    @Query("SELECT c.permisos FROM Usuario u LEFT JOIN FETCH Cargo c ON c.id = u.cargo.id WHERE u.usuario = :usuario")
+    @Query("SELECT c.permisos FROM Usuario u LEFT JOIN FETCH Cargo c ON c.id = u.cargoUsuario.id WHERE u.login = :usuario")
     List<CargoPermiso> fetchAllCargoPermisosByUsuario(String usuario);
 }

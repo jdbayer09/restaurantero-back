@@ -16,6 +16,6 @@ VALUES
     (true, null, now(), 1, 2);
 
 INSERT INTO usuarios
-    (id,active, fecha_actualizacion, fecha_creacion, apellidos, contrasena, nombres, usuario, cargo_id)
+    (id,active, fecha_actualizacion, fecha_creacion, apellidos, contrasena, nombres, login, cargo_id)
 VALUES
     (1, true, null, NOW(), 'Administrado', '$2a$10$ZWZQjQKUs4F5iGGsmT3ZGud/lhz22OrdxEI19L64rLnhzIcsmTdtm', 'Super', 'admin', 1);

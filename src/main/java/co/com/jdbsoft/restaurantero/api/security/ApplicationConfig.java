@@ -16,7 +16,7 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> repository.findByUsuario(username).orElseThrow(() -> new UsernameNotFoundException("No existe el usuario"));
+        return username -> repository.findByLogin(username).orElseThrow(() -> new UsernameNotFoundException("No existe el usuario"));
     }
     @Bean
     public PasswordEncoder passwordEncoder() {
