@@ -1,7 +1,10 @@
 INSERT INTO cargos
-    (id, active, fecha_actualizacion, fecha_creacion, descripcion, nombre)
+    (id, active, fecha_actualizacion, fecha_creacion, descripcion, nombre, visible_al_editar, visible_al_listar)
 VALUES
-    (1, true, null, now(), 'Perfil con todos los permisos del sistema', 'Super Administrador');
+    (1, true, null, now(), 'Perfil con todos los permisos del sistema', 'Super Administrador', false, false),
+    (2, true, null, now(), 'Permite tomar los pedidos.', 'Mesero', false, true),
+    (3, true, null, now(), 'Permite revisar y despachar los pedidos de bebidas.', 'Bartender', false, true),
+    (4, true, null, now(), 'Permite revisar y despachar los pedidos de de la cocina.', 'Cocina', false, true);
 
 INSERT INTO permisos
     (id, active, fecha_actualizacion, fecha_creacion, descripcion, is_menu, nombre, menu_id)

@@ -28,4 +28,8 @@ public class Cargo extends BaseEntity implements Serializable {
     private String nombre;
     @Column(name = "descripcion", length = 300, nullable = false)
     private String descripcion;
+    @Column(name = "visible_al_editar", nullable = false)
+    private boolean visibleAlEditar = true;
+    @Column(name = "visible_al_listar", nullable = false)
+    private boolean visibleAlListar = true;
 }
